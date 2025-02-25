@@ -1,53 +1,48 @@
 "use client";
-import { GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
-export default function Login() {
+export default function LoginPage() {
+  const { user, loginWithGoogle, logout } = useAuth();
+  const containerRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
-    // 🔥 Verifica si ya hay un usuario autenticado y redirige automáticamente
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        router.push("/chat");
-      }
+    gsap.from(containerRef.current, {
+      opacity: 0,
+      y: -50,
+      duration: 1,
+      ease: "power3.out",
     });
-
-    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
-    // 🔥 Verifica si la autenticación con Redirect fue exitosa
-    getRedirectResult(auth)
-      .then(async (result) => {
-        if (result) {
-          const token = await result.user.getIdToken();
-          localStorage.setItem("token", token);
-          router.push("/chat");
-        }
-      })
-      .catch((error) => {
-        console.error("Error en autenticación con redirect:", error);
-      });
-  }, []);
-
-  // Función para iniciar sesión con Google usando Redirect
-  const loginWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-    signInWithRedirect(auth, provider); // 🔥 Redirigir en lugar de usar una ventana emergente
-  };
+    if (user) {
+      router.push("/chat"); // 🔥 Redirige automáticamente al chat si está logueado
+    }
+  }, [user, router]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-2xl font-bold mb-4">Iniciar sesión</h1>
-      <button
-        onClick={loginWithGoogle}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Iniciar sesión con Google
-      </button>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-dark to-primary">
+      <div ref={containerRef} className="bg-white shadow-lg rounded-xl p-6 text-center w-96">
+        <h1 className="text-3xl font-bold text-gray-800">Bienvenido</h1>
+        <p className="text-gray-600 mt-2">Inicia sesión para continuar</p>
+
+        {user ? (
+          <div className="mt-4">
+            <p className="text-lg font-medium">Hola, {user.displayName}</p>
+            <button onClick={logout} className="mt-4 w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition duration-300">
+              Cerrar sesión
+            </button>
+          </div>
+        ) : (
+          <button onClick={loginWithGoogle} className="mt-6 w-full bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded transition duration-300">
+            Iniciar con Google
+          </button>
+        )}
+      </div>
     </div>
   );
 }
