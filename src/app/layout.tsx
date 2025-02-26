@@ -3,8 +3,8 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
-import Navbar from "./components/Navbar";
 import { metadata } from "./metadata";
+import Header from "./components/Header";
 
 
 export default function RootLayout({
@@ -32,9 +32,9 @@ export default function RootLayout({
 
   return (
     <html lang="es">
-      <body className="bg-gray-100 text-gray-900">
+      <body className="h-screen flex flex-col bg-gray-100 text-gray-900">
         <AuthProvider>
-          <Navbar />
+          <Header />
           <main className="p-4">{children}</main>
         </AuthProvider>
       </body>

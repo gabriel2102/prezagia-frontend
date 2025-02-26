@@ -14,12 +14,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-primary text-white p-4 flex justify-between items-center shadow-md">
-      {/* 🔵 Nombre de la Aplicación */}
-      <h1 className="text-xl font-bold cursor-pointer" onClick={() => router.push("/")}>
-        🌟 Prezagia
-      </h1>
-
+    <nav >   
       {/* 🔵 Menú de Usuario */}
       {user && (
         <div className="relative">
