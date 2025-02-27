@@ -1,10 +1,11 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Lenis from "lenis";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { metadata } from "./metadata";
 import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
 
 
 export default function RootLayout({
@@ -29,13 +30,20 @@ export default function RootLayout({
 
     return () => lenis.destroy(); // Limpia Lenis al desmontar
   }, []);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <html lang="es">
-      <body className="h-screen flex flex-col bg-gray-100 text-gray-900">
+      <body className="h-screen flex bg-white text-gray-900 overflow-y-hidden">
         <AuthProvider>
-          <Header />
-          <main className="p-4">{children}</main>
+          
+          <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+          <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
+            isSidebarOpen ? "ml-64" : "ml-0"
+          }`}>
+            <Header toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+            <main>{children}</main>
+          </div>
         </AuthProvider>
       </body>
     </html>

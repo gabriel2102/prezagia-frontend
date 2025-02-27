@@ -3,16 +3,16 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { db } from "@/lib/firebase";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi"; // 🔥 Íconos para abrir/cerrar
 
 interface Question {
   id: string;
   mensaje: string;
 }
 
-export default function Sidebar({ onSelectQuestion }: { onSelectQuestion: (mensaje: string) => void }) {
+export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (open: boolean) => void }) {
   const { user } = useAuth();
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     if (!user) return;
@@ -37,23 +37,17 @@ export default function Sidebar({ onSelectQuestion }: { onSelectQuestion: (mensa
   }, [user]);
 
   return (
-    <>
-      {/* Botón de abrir/cerrar que se mueve con el Sidebar */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`fixed top-[4.5rem] left-${isOpen ? "64" : "0"} bg-primary text-white p-2 rounded-r-lg shadow-md transition-all duration-300 z-40`}
-      >
-        {isOpen ? "❮" : "❯"}
-      </button>
-
-      {/* Sidebar: Ahora inicia debajo del Navbar (top-16) y se ajusta sin superponerlo */}
+    <div className="flex">
+      {/* 📌 Sidebar */}
       <div
-        className={`fixed top-16 left-0 h-[calc(100vh-4rem)] bg-gray-800 text-white w-64 transition-transform transform ${
+        className={`fixed top-0 left-0 h-screen bg-gray-800 text-white w-64 transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-64"
-        } shadow-lg z-30`}
+        } shadow-lg z-40`}
       >
+        {/* 📌 Título */}
         <h2 className="text-xl font-bold p-4 border-b border-gray-700">📜 Historial</h2>
 
+        {/* 📌 Lista de Preguntas */}
         <div className="p-4 space-y-2 overflow-y-auto max-h-[80vh]">
           {questions.length === 0 ? (
             <p className="text-gray-400">No hay preguntas aún.</p>
@@ -61,7 +55,7 @@ export default function Sidebar({ onSelectQuestion }: { onSelectQuestion: (mensa
             questions.map((question) => (
               <button
                 key={question.id}
-                onClick={() => onSelectQuestion(question.mensaje)}
+                //onClick={() => onSelectQuestion(question.mensaje)}
                 className="block w-full text-left bg-gray-700 hover:bg-gray-600 p-2 rounded transition"
               >
                 {question.mensaje.length > 30 ? question.mensaje.substring(0, 30) + "..." : question.mensaje}
@@ -70,6 +64,14 @@ export default function Sidebar({ onSelectQuestion }: { onSelectQuestion: (mensa
           )}
         </div>
       </div>
-    </>
+
+      {/* 📌 Botón de abrir/cerrar que se mueve con el Sidebar */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={`fixed top-1/2 transform -translate-y-1/2 left-${isOpen ? "64" : "0"} bg-primary text-white p-2 rounded-r-lg shadow-md transition-all duration-300 z-50`}
+      >
+        {isOpen ? <FiChevronLeft size={20} /> : <FiChevronRight size={20} />}
+      </button>
+    </div>
   );
 }

@@ -12,10 +12,9 @@ export default function ChatPage() {
   return (
     <div>
       {/* Sidebar */}
-      <Sidebar onSelectQuestion={(selectedMensaje) => setMensaje(selectedMensaje)} />
 
       {/* Contenedor Principal del Chat */}
-      <ChatContainer />
+      <ChatContainer selectedQuestion={mensaje} />
     </div>
   );
 }
