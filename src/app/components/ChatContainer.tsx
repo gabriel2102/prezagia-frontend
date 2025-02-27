@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useAuth } from "@/context/AuthContext";
+import { FiArrowUp } from "react-icons/fi"; // 🔥 Flecha para enviar
 
 interface Message {
   text: string;
@@ -89,42 +90,45 @@ export default function ChatContainer({ selectedQuestion }: { selectedQuestion: 
 
   return (
     <>
-        <div className="flex flex-col h-screen w-3/5 mx-auto">
-            {/* 📌 Contenedor del Chat */}
-            <div ref={chatContainerRef} className="flex-1 overflow-y-hidden p-4 bg-white">
-                {messages.map((msg, index) => (
-                <div key={index} className={`w-full py-2 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
-                    {/* 📌 Si es usuario, mantiene el globo */}
-                    {msg.sender === "user" ? (
-                    <div className="inline-block bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md">
-                        {msg.text}
-                    </div>
-                    ) : (
-                    // 📌 Si es bot, ocupa todo el ancho sin globo
-                    <div className="w-full text-gray-900 p-2">{msg.text}</div>
-                    )}
+      <div className="flex flex-col h-screen w-1/2 mx-auto">
+        {/* 📌 Contenedor del Chat */}
+        <div ref={chatContainerRef} className="flex-1 overflow-y-hidden p-4 bg-white">
+          {messages.map((msg, index) => (
+            <div key={index} className={`w-full py-2 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
+              {/* 📌 Si es usuario, mantiene el globo */}
+              {msg.sender === "user" ? (
+                <div className="inline-block bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md">
+                  {msg.text}
                 </div>
-                ))}
-            </div>        
+              ) : (
+                // 📌 Si es bot, ocupa todo el ancho sin globo
+                <div className="w-full text-gray-900 p-2">{msg.text}</div>
+              )}
+            </div>
+          ))}
         </div>
         {/* 📌 Área de Entrada de Mensajes */}
-        <div className="sticky bottom-0 p-4 bg-gray-200 flex items-center h-16 w-3/5 mx-auto">
-            <input
-            type="text"
-            value={mensaje}
-            onChange={(e) => setMensaje(e.target.value)}
-            placeholder="Escribe tu mensaje..."
-            className="flex-1 border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onKeyPress={(e) => e.key === "Enter" && enviarMensaje()}
+        <div className="sticky bottom-0 pb-4 flex items-center justify-center">
+            <div className="relative w-[770px]">
+            <textarea
+                value={mensaje}
+                onChange={(e) => setMensaje(e.target.value)}
+                placeholder="Escribe tu mensaje..."
+                className="w-full h-[120px] border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pr-14 resize-none overflow-hidden align-top"
+                onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && enviarMensaje()}
             />
             <button
-            onClick={() => enviarMensaje()}
-            className="ml-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition"
+                onClick={() => enviarMensaje()}
+                disabled={!mensaje.trim()} // 🔥 Desactiva si la caja está vacía
+                className="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full transition disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-            🚀 Enviar
+                <FiArrowUp className="h-6 w-6" />
             </button>
+            </div>
         </div>
-    
+      </div>
+
+      
     </>
   );
 }
