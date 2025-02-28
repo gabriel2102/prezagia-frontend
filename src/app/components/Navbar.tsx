@@ -10,7 +10,7 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await logout();
-    router.push("/login"); // Redirige al login después del logout
+    router.push("/auth"); // Redirige al login después del logout
   };
 
   return (

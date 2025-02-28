@@ -9,7 +9,7 @@ export default function Home() {
       <h1 className="text-3xl font-bold mb-4">Bienvenido a Prezagia</h1>
       <p className="mb-4">Descubre tu destino con la astrología y la IA.</p>
       <button
-        onClick={() => router.push("/login")}
+        onClick={() => router.push("/auth")}
         className="bg-blue-500 text-white px-4 py-2 rounded"
       >
         Iniciar Sesión

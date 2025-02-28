@@ -3,6 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useAuth } from "@/context/AuthContext";
 import { FiArrowUp } from "react-icons/fi"; // 🔥 Flecha para enviar
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { useRouter } from "next/router";
 
 interface Message {
   text: string;
@@ -87,7 +90,6 @@ export default function ChatContainer({ selectedQuestion }: { selectedQuestion: 
     setMessages((prev) => [...prev, { text: "", sender: "bot" }]);
     escribir();
   };
-
   return (
     <>
       <div className="flex flex-col h-screen w-1/2 mx-auto">

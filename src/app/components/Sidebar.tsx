@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { db } from "@/lib/firebase";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi"; // 🔥 Íconos para abrir/cerrar
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 interface Question {
   id: string;
